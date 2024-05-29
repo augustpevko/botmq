@@ -1,0 +1,21 @@
+FROM python:slim AS converter_builder
+
+RUN apt-get update && \
+    apt-get install -y gcc
+
+RUN python -m venv /opt/venv/
+ENV PATH="/opt/venv/bin:$PATH"
+
+COPY converter/requirements.txt .
+RUN /opt/venv/bin/pip install -r requirements.txt
+
+FROM python:slim AS converter_runtime
+
+COPY --from=converter_builder /opt/venv /opt/venv
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/opt/venv/bin:$PATH"
+
+WORKDIR /app
+COPY converter/ /app/converter/

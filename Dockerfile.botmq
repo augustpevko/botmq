@@ -1,0 +1,25 @@
+FROM python:slim AS botmq_builder
+
+RUN apt-get update && \
+    apt-get install -y libpq-dev gcc
+
+RUN python -m venv /opt/venv/
+ENV PATH="/opt/venv/bin:$PATH"
+
+COPY botmq/requirements.txt .
+RUN pip install -r requirements.txt
+
+FROM python:slim AS botmq_runtime
+
+RUN apt-get update && \
+    apt-get install -y libpq-dev
+
+COPY --from=botmq_builder /opt/venv /opt/venv
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/opt/venv/bin:$PATH"
+
+WORKDIR /app
+COPY botmq/ /app/botmq/
+COPY converter/ /app/converter/

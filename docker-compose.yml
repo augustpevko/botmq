@@ -1,0 +1,44 @@
+services:
+  botmq:
+    build:
+      context: .
+      dockerfile: Dockerfile.botmq
+      target: botmq_runtime
+    command: python -m botmq
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+      ADMIN_IDS: ${ADMIN_IDS}
+      SERVER_ADDRESS: ${SERVER_ADDRESS}
+      SERVER_PORT: ${SERVER_PORT}
+      SERVER_TIMEOUT: ${SERVER_TIMEOUT}
+
+      POSTGRES_HOST: postgresql
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+
+  converter:
+    build:
+      context: .
+      dockerfile: Dockerfile.converter
+      target: converter_runtime
+    command: python -m converter
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+    environment:
+      MQTT_ADDRESS: ${MQTT_ADDRESS}
+      MQTT_PORT: ${MQTT_PORT}
+      MQTT_USERNAME: ${MQTT_USERNAME}
+      MQTT_PASSWORD: ${MQTT_PASSWORD}
+      MQTT_TOPICS: ${MQTT_TOPICS}
+
+  postgresql:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5232:5432"

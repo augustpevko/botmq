@@ -1,0 +1,6 @@
+python-dotenv==1.0.0
+paho-mqtt==1.6.1
+asyncio
+requests
+aiohttp
+environs

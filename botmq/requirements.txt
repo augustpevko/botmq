@@ -1,0 +1,6 @@
+aiogram<4.0
+python-dotenv==1.0.0
+psycopg2-binary
+asyncio
+requests
+environs
