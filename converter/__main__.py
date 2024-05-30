@@ -36,11 +36,11 @@ class HttpConverter:
         await web._run_app(app, host=self.host, port=self.port)
 
 async def main():
-    server = HttpConverter('0.0.0.0', 40123, Mqtt(config.MQTT_ADDRESS, 
-                                                  config.MQTT_PORT, 
-                                                  config.MQTT_USERNAME, 
-                                                  config.MQTT_PASSWORD, 
-                                                  config.MQTT_TOPICS))
+    server = HttpConverter('0.0.0.0', config.SERVER_PORT, Mqtt(config.MQTT_ADDRESS, 
+                                                               config.MQTT_PORT, 
+                                                               config.MQTT_USERNAME, 
+                                                               config.MQTT_PASSWORD, 
+                                                               config.MQTT_TOPICS))
     await server.run()
 
 if __name__ == '__main__':
